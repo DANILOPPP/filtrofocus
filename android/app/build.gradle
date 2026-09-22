@@ -1,0 +1,17 @@
+
+apply plugin: 'com.android.application'
+android {
+    namespace 'com.filtrofocus.app'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.filtrofocus.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 12
+        versionName "12.0-ANITTA-BLOCK"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
