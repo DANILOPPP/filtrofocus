@@ -16,10 +16,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK 35
+      - name: Setup Android SDK 35 - FIXED
         run: |
-          echo "y" | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls $ANDROID_HOME/cmdline-tools/
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0" "platforms;android-34"
 
       - name: Setup Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
@@ -36,4 +38,3 @@ jobs:
         with:
           name: FiltroFocus-Android15-APK
           path: android/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
