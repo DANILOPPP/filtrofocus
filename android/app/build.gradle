@@ -1,0 +1,22 @@
+
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.filtrofocus.app'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.filtrofocus.app"
+        minSdk 21
+        targetSdk 34
+        versionCode 4
+        versionName "4.0-FIXED-PLUGIN"
+    }
+    buildTypes {
+        release { minifyEnabled false }
+        debug { minifyEnabled false }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
