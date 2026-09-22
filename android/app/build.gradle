@@ -1,0 +1,17 @@
+
+apply plugin: 'com.android.application'
+android {
+    namespace 'com.filtrofocus.app'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.filtrofocus.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 13
+        versionName "13.0-KEYWORDS"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

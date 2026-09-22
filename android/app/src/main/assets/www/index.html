@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FiltroFocus V13</title>
+<style>
+*{box-sizing:border-box}body{font-family:system-ui;background:#0f0f14;color:#fff;margin:0;padding:16px}
+.card{background:#1e1e28;border-radius:16px;padding:16px;margin-bottom:12px}
+h2{margin:0 0 8px 0}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;font-size:16px}
+button{border:none;border-radius:10px;padding:12px 16px;font-weight:bold;cursor:pointer}
+.btn-add{background:#7c3aed;color:#fff;width:100%;margin-top:8px}
+.btn-test{background:#222;color:#fff;width:100%;margin-top:8px}
+.tag{display:inline-flex;align-items:center;background:#2a2a3a;border:1px solid #3a3a4a;padding:6px 10px;border-radius:20px;margin:4px;font-size:14px}
+.tag span{margin-left:8px;color:#ff4d6d;cursor:pointer;font-weight:bold}
+.small{opacity:.6;font-size:12px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>🔒 FiltroFocus V13</h2>
+<div class="small">Adicione palavras que você NÃO quer ver. O app vai esconder automaticamente.</div>
+<input id="kwInput" placeholder="Ex: Anitta, BBB, Politica, Futebol...">
+<button class="btn-add" onclick="addKw()">+ Adicionar palavra</button>
+<div id="list" style="margin-top:12px"></div>
+<div class="small">Dica: palavras são insensíveis a maiúsculas. ANITTA = anitta = Anitta</div>
+</div>
+
+<div class="card">
+<button class="btn-test" onclick="goGoogle()">🔍 Testar no Google (dentro do app)</button>
+<button class="btn-test" style="margin-top:8px;background:#333" onclick="location.reload()">↻ Atualizar lista</button>
+</div>
+
+<script>
+function getKeywords(){
+ try{
+  if(window.Android && Android.getKeywordsJson){
+    return JSON.parse(Android.getKeywordsJson());
+  } else {
+    return JSON.parse(localStorage.getItem('ff_kw')||'["ANITTA"]');
+  }
+ }catch(e){return ["ANITTA"]}
+}
+function saveKeywords(arr){
+  if(window.Android && Android.setKeywordsJson){
+    Android.setKeywordsJson(JSON.stringify(arr));
+  } else {
+    localStorage.setItem('ff_kw', JSON.stringify(arr));
+  }
+  render();
+}
+function render(){
+  var kws = getKeywords();
+  var el = document.getElementById('list');
+  if(kws.length==0){ el.innerHTML='<div class=small>Nenhuma palavra bloqueada ainda.</div>'; return; }
+  el.innerHTML = kws.map(function(k,i){ return '<div class=tag>'+k+'<span onclick="removeKw('+i+')">✕</span></div>'; }).join('');
+}
+function addKw(){
+  var input = document.getElementById('kwInput');
+  var val = (input.value||'').trim();
+  if(!val) return;
+  var kws = getKeywords();
+  if(kws.map(function(s){return s.toUpperCase()}).indexOf(val.toUpperCase())==-1){
+    kws.push(val);
+    saveKeywords(kws);
+    if(window.Android && Android.addKeyword) Android.addKeyword(val);
+  }
+  input.value='';
+}
+function removeKw(i){
+  var kws = getKeywords();
+  var removed = kws[i];
+  kws.splice(i,1);
+  saveKeywords(kws);
+  if(window.Android && Android.removeKeyword) Android.removeKeyword(removed);
+}
+function goGoogle(){
+  window.location.href='https://www.google.com/search?q=Anitta+BBB+politica';
+}
+render();
+</script>
+</body>
+</html>
