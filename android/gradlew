@@ -1,0 +1,3 @@
+#!/bin/sh
+# dummy wrapper that calls system gradle
+exec gradle "$@"
