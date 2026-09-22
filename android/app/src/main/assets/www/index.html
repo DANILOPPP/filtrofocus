@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>V16</title>
+<style>body{margin:0;font-family:system-ui;background:#000;color:#fff;padding:16px}.card{background:#111;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #222}input{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#0a0a0a;color:#fff}button{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:8px;background:#ff0033;color:#fff} .tag{display:inline-flex;background:#1a1a1a;padding:8px 12px;border-radius:20px;margin:5px} .perm{padding:12px;border-radius:10px;text-align:center;font-weight:bold;background:#ffaa00;color:#000;margin-bottom:8px} .perm.ok{background:#00ff88} .onoff{padding:16px;border-radius:12px;background:#7c3aed;color:#fff;text-align:center;font-weight:bold} .onoff.off{background:#333} .small{opacity:.6;font-size:12px}</style>
+</head><body>
+<div class="card" style="background:#ff0033"><h2>🚫 FiltroFocus V16</h2><div>BLOQUEADOR REAL - Todos os apps</div></div>
+<div class="card"><div id="status" class="onoff off" onclick="toggle()">🔴 DESATIVADO - Clique para ativar</div></div>
+<div class="card"><div id="pA" class="perm" onclick="reqA()">1 - ATIVAR ACESSIBILIDADE (OBRIGATÓRIO)</div><div class="small">Sem isso não bloqueia fora do app</div></div>
+<div class="card"><h3>Palavras bloqueadas (vazia de fábrica)</h3><input id="kw" placeholder="Ex: Anitta"><button onclick="add()">+ BLOQUEAR PALAVRA</button><div id="list" style="margin-top:10px"></div><button style="background:#222;color:#fff" onclick="clearAll()">Limpar tudo</button><button style="background:#111;color:#fff;border:1px solid #333" onclick="test()">Testar bloqueio</button></div>
+<script>
+function get(){try{if(window.Android)return JSON.parse(Android.getK());return JSON.parse(localStorage.getItem('ff')||'[]')}catch(e){return []}}
+function save(a){if(window.Android)Android.setK(JSON.stringify(a));else localStorage.setItem('ff',JSON.stringify(a));render()}
+function render(){var k=get();var el=document.getElementById('list');if(k.length==0){el.innerHTML='<div style="opacity:.5;text-align:center;padding:10px;border:1px dashed #333">Lista vazia</div>';return}el.innerHTML=k.map((x,i)=>'<span class=tag>'+x+' <b onclick="rem('+i+')" style="color:red;cursor:pointer"> x</b></span>').join('');upd()}
+function add(){var v=document.getElementById('kw').value.trim();if(!v)return;var k=get();if(k.map(s=>s.toUpperCase()).indexOf(v.toUpperCase())==-1){k.push(v);save(k);if(window.Android)Android.add(v);}document.getElementById('kw').value='';}
+function rem(i){var k=get();var r=k[i];k.splice(i,1);save(k);if(window.Android)Android.rem(r);}
+function clearAll(){save([]);if(window.Android)Android.setK('[]');}
+function test(){if(window.Android)Android.testBlock();else location.href='https://www.google.com/search?q=Anitta';}
+function toggle(){if(window.Android)Android.toggleMaster();upd();}
+function reqA(){if(window.Android)Android.reqAcc();}
+function upd(){if(!window.Android)return;var on=Android.isOn();document.getElementById('status').innerText=on?'🟢 BLOQUEIO ATIVADO':'🔴 DESATIVADO';document.getElementById('status').className=on?'onoff':'onoff off';var ok=Android.hasAcc();document.getElementById('pA').className=ok?'perm ok':'perm';document.getElementById('pA').innerText=ok?'✅ Acessibilidade ATIVA':'1 - ATIVAR ACESSIBILIDADE';}
+setInterval(upd,1000);render();upd();
+</script></body></html>
